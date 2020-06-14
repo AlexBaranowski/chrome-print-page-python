@@ -16,10 +16,21 @@ On the second terminal invoke script
 
 Python 3.6+ and modules from `requirements.txt`
 
+Depedency installation within virtualenv
+
+```
+virtualenv -p /usr/bin/python3 venv
+. venv/bin/activate
+pip install -r requirements.txt 
+```
 
 ## Documentation
 
 https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
+
+```
+./print_with_chrome.py -h
+```
 
 ## Other solutions
 

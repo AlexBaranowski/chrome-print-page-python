@@ -7,21 +7,10 @@ import PyChromeDevTools
 import time
 import argparse
 import base64
-WAIT_TIME=10
 
-def str2bool(val):
-    if isinstance(val, bool):
-        return val
-    exception_message = 'Boolean value expected. Supported values (ignorecased) yes/no true/false t/f y/n 1/0'
-    try: 
-        val = val.lower()
-        if val in ('yes', 'true', 't', 'y', '1'):
-            return True
-        elif val in ('no', 'false', 'f', 'n', '0'):
-            return False
-    except:
-        raise argparse.ArgumentTypeError(exception_message + f"Unkown value type: {type(val)}")
-    raise argparse.ArgumentTypeError(exception_message)
+
+TIMEOUT_TIME=120
+WAIT_TIME=10
 
 default_args={
     "print_to": "output.pdf",
@@ -41,18 +30,34 @@ default_args={
     "preferCSSPageSize": False
 }
 
+
+def str2bool(val):
+    if isinstance(val, bool):
+        return val
+    exception_message = 'Boolean value expected. Supported values (ignorecased) yes/no true/false t/f y/n 1/0'
+    try: 
+        val = val.lower()
+        if val in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif val in ('no', 'false', 'f', 'n', '0'):
+            return False
+    except:
+        raise argparse.ArgumentTypeError(exception_message + f"Unkown value type: {type(val)}")
+    raise argparse.ArgumentTypeError(exception_message)
+
 def main(args_dict):
     url = args_dict['url']
     del(args_dict['url'])
     print_to = args_dict['print_to']
     del(args_dict['print_to'])
-    chrome = PyChromeDevTools.ChromeInterface(timeout=500)
+    chrome = PyChromeDevTools.ChromeInterface(timeout=TIMEOUT_TIME)
     chrome.Network.enable()
     chrome.Page.enable()
-
+    print("Loading page... ")
     chrome.Page.navigate(url=url)
     time.sleep(WAIT_TIME)
     chrome.wait_event("Page.frameStoppedLoading", timeout=60)
+    print(f"Making PDF (this might take some time) timeout set to - {TIMEOUT_TIME}...")
     response = chrome.Page.printToPDF(**args_dict)
     with open(print_to, 'wb') as f:
         f.write(base64.decodebytes(str.encode(response['result']['data'])))
@@ -79,5 +84,4 @@ if __name__ == '__main__':
         parsed_arg = getattr(parsed_args, k)
         args[k] = parsed_arg if parsed_arg is not None else default_args[k]
     print("Printing args", args)
-    print(PyChromeDevTools.__file__)
     main(args)
