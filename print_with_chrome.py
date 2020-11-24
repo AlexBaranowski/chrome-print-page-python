@@ -17,8 +17,8 @@ default_args={
     "landscape": False,
     "displayHeaderFooter": False,
     "printBackground": False,
-    "paperWidth": 8.5,  # inch
-    "paperHeight": 11.0,  # inch
+    "paperWidth": 8.27,  # inch
+    "paperHeight": 11.69,  # inch - noice
     "marginTop": 1.0,  # 1cm
     "marginBottom": 1.0,
     "marginLeft": 1.0,
